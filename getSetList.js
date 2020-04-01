@@ -1,7 +1,5 @@
 const set = "mb1";
-const cards = 1694;
-const delay = 1000;
-let currentCard = 1;
+const delay = 15000;
 
 const fs = require("fs");
 const axios = require("axios");
@@ -29,25 +27,33 @@ if (!fs.existsSync(set + "/" + today)){
     fs.mkdirSync(set + "/" + today);
 }
 
+if (!fs.existsSync(set + "/" + today + "/pages")){
+  fs.mkdirSync(set + "/" + today + "/pages");
+}
+
 // option + shift + f to format JSON
 const begin = new Date()
 console.log(begin.toLocaleTimeString() + ", " + begin.getMilliseconds() + " ms: start")
 
+let endTime
+let page = 1
+let uri = "https://api.scryfall.com/cards/search?order=set&unique=prints&q=in%3A" + set
 const storeCardInfo = () => {
   const startTime = new Date()
-  console.log(startTime.toLocaleTimeString() + ", " + startTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " request")
-  axios.get("https://api.scryfall.com/cards/" + set + "/" + currentCard)
+  console.log(startTime.toLocaleTimeString() + ", " + startTime.getMilliseconds() + "ms: " + set + " page " + page + " request" + (endTime ? ("; delay " + (startTime - endTime) + " ms") : ""))
+  axios.get(uri)
        .then(val => {
-         const endTime = new Date()
-         console.log(endTime.toLocaleTimeString() + ", " + endTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " received")
-         currentCard++;
-         if (currentCard <= cards) {
+         endTime = new Date()
+         console.log(endTime.toLocaleTimeString() + ", " + endTime.getMilliseconds() + "ms: " + set + " page " + page + " received")
+         page++;
+         if (val.status !== 429 && val.data.object === "list" && val.data.next_page) { // check for valid response, otherwise stop requesting
+           uri = val.data.next_page;
            setTimeout(storeCardInfo, delay);
          }
          const data = val.data;
          // requires directory to exist
          // overwrites existing file
-         writeFile(set + "/" + today + "/" + data.collector_number + ".json", JSON.stringify(data));
+         writeFile(set + "/" + today + "/pages/" + (page - 1) + ".json", JSON.stringify(data));
        })
        .catch(err => console.error(err));
 }
