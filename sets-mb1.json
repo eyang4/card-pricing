@@ -1,0 +1,16 @@
+{
+  "object": "set",
+  "id": "d13bfc70-6137-4179-aa96-da30fd84de29",
+  "code": "mb1",
+  "tcgplayer_id": 2572,
+  "name": "Mystery Booster",
+  "uri": "https://api.scryfall.com/sets/d13bfc70-6137-4179-aa96-da30fd84de29",
+  "scryfall_uri": "https://scryfall.com/sets/mb1",
+  "search_uri": "https://api.scryfall.com/cards/search?order=set&q=e%3Amb1&unique=prints",
+  "released_at": "2019-11-07",
+  "set_type": "funny",
+  "card_count": 1694,
+  "digital": false,
+  "foil_only": false,
+  "icon_svg_uri": "https://img.scryfall.com/sets/planeswalker.svg?1585540800"
+}
