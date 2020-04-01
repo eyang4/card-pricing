@@ -1,7 +1,6 @@
-const axios = require("axios")
-const fs = require("fs")
+const fs = require("fs");
 
-var data = "New File Contents";
+const data = "New File Contents";
 
 fs.writeFile("temp.txt", data, (err) => { // if a buffer is being returned, specify the encoding
   if (err) console.log(err);
