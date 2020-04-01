@@ -1,5 +1,6 @@
 const set = "mb1";
-const delay = 15000;
+const delay = 7500;
+let page = 1
 
 const fs = require("fs");
 const axios = require("axios");
@@ -36,7 +37,6 @@ const begin = new Date()
 console.log(begin.toLocaleTimeString() + ", " + begin.getMilliseconds() + " ms: start")
 
 let endTime
-let page = 1
 let uri = "https://api.scryfall.com/cards/search?order=set&unique=prints&q=in%3A" + set
 const storeCardInfo = () => {
   const startTime = new Date()
