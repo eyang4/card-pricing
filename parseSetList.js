@@ -12,11 +12,13 @@ const writeFile = (location, data) => {
 
 const cardBank = {};
 const maxPages = Math.ceil(totalCards / 175);
+let completed = 0;
 while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
-  console.log(`Processing page ${page} out of ${maxPages}`);
+  console.log(`Queued page ${page} of ${maxPages}`);
   fs.readFile("mb1/" + date + "/pages/" + page + ".json", function(err, buf) {
     if (err) console.error(err);
-    const cardArray = JSON.parse(buf).data;
+    const response = JSON.parse(buf)
+    const cardArray = response.data;
 
     for (let i = 0; i < cardArray.length; i++) {
       const card = cardArray[i];
@@ -61,8 +63,26 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
         }
       }
     }
+    completed++; // does not present a race condition in Node.js
 
-    if (page >= maxPages) writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
+    let currentPage;
+    if (!response.next_page) currentPage = maxPages;
+    else {
+      const numbers = "0123456789";
+      const startPosition = response.next_page.indexOf("page=") + 5;
+      let endPosition = startPosition;
+      while (numbers.includes(response.next_page[endPosition])) endPosition++;
+      currentPage = parseInt(response.next_page.slice(startPosition, endPosition)) - 1;
+    }
+    console.log(`Processed page ${currentPage}; total of ${completed} pages`);
+
+    if (completed >= maxPages) {
+      // for (const card in cardBank) { // checking for multiple versions of a card
+      //   if (Object.keys(cardBank[card]["Mystery Booster"]).length > 1) console.log(card);
+      // }
+
+      // writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
+    }
 
   });
   page++;
