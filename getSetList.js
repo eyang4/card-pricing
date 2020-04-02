@@ -8,16 +8,8 @@ const axios = require("axios");
 const writeFile = (location, data) => {
   fs.writeFile(location, data, (err) => { // if a buffer is being returned, specify the encoding
     if (err) console.error(err);
-    // console.log("Write success");
   });
 }
-
-// const readFile = location => {
-//   fs.readFile("temp.txt", function(err, buf) {
-//     if (err) console.error(err);
-//     console.log(buf.toString());
-//   });
-// }
 
 if (!fs.existsSync(set)){
   fs.mkdirSync(set);
