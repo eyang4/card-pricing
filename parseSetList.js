@@ -1,6 +1,8 @@
 let page = 1;
-const date = "Wed-Apr-01-2020"
+const date = "Wed-Apr-01-2020";
+// const date = new Date().toDateString().replace(/ /g, '-'); // for automated daily parsing
 const totalCards = 7785;
+const setName = "Mystery Booster";
 
 const fs = require("fs");
 
@@ -77,9 +79,32 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
     console.log(`Processed page ${currentPage}; total of ${completed} pages`);
 
     if (completed >= maxPages) {
-      // for (const card in cardBank) { // checking for multiple versions of a card
-      //   if (Object.keys(cardBank[card]["Mystery Booster"]).length > 1) console.log(card);
-      // }
+      for (const card in cardBank) {
+        if (Object.keys(cardBank[card][setName]).length > 1) console.log(card); // checking for multiple versions of a card
+
+        const cardPricesFromSet = Object.values(cardBank[card][setName])[0].prices;
+        const setLowPrice = [];
+        if (cardPricesFromSet.usd) setLowPrice.push(cardPricesFromSet.usd); // factor in null values
+        if (cardPricesFromSet.usd_foil) setLowPrice.push(cardPricesFromSet.usd_foil);
+        let lowPriceFromSet;
+        if (setLowPrice.length === 0) lowPriceFromSet = null;
+        else lowPriceFromSet = Math.min(...setLowPrice);
+
+        const otherSetLowPrice = [];
+        let lowPriceFromOtherSets;
+        for (const set in cardBank[card]) {
+          if (set !== setName) {
+            for (const collectorNumber in cardBank[card][set]) {
+              if (lowPriceFromOtherSets) otherSetLowPrice.push(lowPriceFromOtherSets);
+              if (cardBank[card][set][collectorNumber].prices.usd) otherSetLowPrice.push(cardBank[card][set][collectorNumber].prices.usd);
+              if (cardBank[card][set][collectorNumber].prices.usd_foil) otherSetLowPrice.push(cardBank[card][set][collectorNumber].prices.usd_foil);
+              if (otherSetLowPrice.length !== 0) lowPriceFromOtherSets = Math.min(...otherSetLowPrice);
+            }
+          }
+        }
+
+        if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = 100 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets;
+      }
 
       // writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
     }
