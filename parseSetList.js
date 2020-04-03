@@ -103,10 +103,12 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
           }
         }
 
+        if (lowPriceFromSet) cardBank[card].lowPriceFromSet = lowPriceFromSet;
+        if (lowPriceFromOtherSets) cardBank[card].lowPriceFromOtherSets = lowPriceFromOtherSets;
         if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = 100 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets;
       }
 
-      // writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
+      writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
     }
 
   });
