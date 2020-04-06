@@ -29,7 +29,7 @@ const begin = new Date();
 console.log(begin.toLocaleTimeString() + ", " + begin.getMilliseconds() + " ms: start");
 
 let endTime;
-let uri = "https://api.scryfall.com/cards/search?order=set&unique=prints&q=in%3A" + set + "page=" + page;
+let uri = "https://api.scryfall.com/cards/search?order=set&unique=prints&q=in%3A" + set + "&page=" + page;
 const storeCardInfo = () => {
   const startTime = new Date();
   console.log(startTime.toLocaleTimeString() + ", " + startTime.getMilliseconds() + "ms: " + set + " page " + page + " request" + (endTime ? ("; delay " + (startTime - endTime) + " ms") : ""));
