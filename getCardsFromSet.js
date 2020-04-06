@@ -22,17 +22,17 @@ if (!fs.existsSync(set + "/" + today)){
 }
 
 // option + shift + f to format JSON
-const begin = new Date()
-console.log(begin.toLocaleTimeString() + ", " + begin.getMilliseconds() + " ms: start")
+const begin = new Date();
+console.log(begin.toLocaleTimeString() + ", " + begin.getMilliseconds() + " ms: start");
 
-let endTime
+let endTime;
 const storeCardInfo = () => {
-  const startTime = new Date()
-  console.log(startTime.toLocaleTimeString() + ", " + startTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " request" + (endTime ? ("; delay " + (startTime - endTime) + " ms") : ""))
+  const startTime = new Date();
+  console.log(startTime.toLocaleTimeString() + ", " + startTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " request" + (endTime ? ("; delay " + (startTime - endTime) + " ms") : ""));
   axios.get("https://api.scryfall.com/cards/" + set + "/" + currentCard)
        .then(val => {
-         endTime = new Date()
-         console.log(endTime.toLocaleTimeString() + ", " + endTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " received")
+         endTime = new Date();
+         console.log(endTime.toLocaleTimeString() + ", " + endTime.getMilliseconds() + "ms: " + set + " card " + currentCard + " received");
          currentCard++;
          if (val.status !== 429 && val.data.object === "card" && currentCard <= cards) { // check for valid response, otherwise stop requesting
            setTimeout(storeCardInfo, delay);
@@ -44,4 +44,4 @@ const storeCardInfo = () => {
        })
        .catch(err => console.error(err));
 }
-storeCardInfo()
+storeCardInfo();

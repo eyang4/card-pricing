@@ -19,7 +19,7 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
   console.log(`Queued page ${page} of ${maxPages}`);
   fs.readFile("mb1/" + date + "/pages/" + page + ".json", function(err, buf) {
     if (err) console.error(err);
-    const response = JSON.parse(buf)
+    const response = JSON.parse(buf);
     const cardArray = response.data;
 
     for (let i = 0; i < cardArray.length; i++) {
