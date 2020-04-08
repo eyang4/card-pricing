@@ -108,7 +108,7 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
         if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = 100 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets;
       }
 
-      writeFile("mb1/" + date + "/parsedPage.json", JSON.stringify(cardBank));
+      writeFile("mb1/" + date + "/parsedPage.js", "const cardBank = " + JSON.stringify(cardBank));
     }
 
   });

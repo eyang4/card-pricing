@@ -6,17 +6,35 @@ React.createElement('h1', null, 'Greetings, ' + this.props.name + '!');
 React.createElement(Greetings, { name : 'Chris' });
 */
 
-class Greetings extends React.Component
+class PriceTable extends React.Component
 {
-  render()
-  {
+  constructor() {
+    super();
+    this.state = Object.entries(cardBank);
+  }
+  render() {
     return (
-      React.createElement('h1', null, 'Greetings, ' + this.props.name + '!')
+      React.createElement('table', null,
+        React.createElement('thead', null,
+          React.createElement('th', null, 'Name'),
+          React.createElement('th', {title: 'Set'}, 'Price'),
+          React.createElement('th', {title: 'Set'}, 'Price'),
+          React.createElement('th', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount'),
+        ),
+        ...this.state.map(elem =>
+          React.createElement('tr', null,
+            React.createElement('td', null, elem[0]),
+            React.createElement('td', {title: 'Set'}, 'Price'),
+            React.createElement('td', {title: 'Set'}, 'Price'),
+            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount'),
+          )
+        )
+      )
     );
   }
 }
 
 ReactDOM.render(
-  React.createElement(Greetings, { name : 'Chris' }),
+  React.createElement(PriceTable),
   document.getElementById('app')
 );
