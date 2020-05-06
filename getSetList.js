@@ -1,6 +1,12 @@
+const CLA = process.argv.slice(2); // command line arguments
+if (CLA[0]) {
+  console.log("Arguments under construction");
+  return; // terminate
+}
+
 const set = "mb1";
 const delay = 7500;
-let page = 38;
+let page = 1;
 
 const fs = require("fs");
 const axios = require("axios");
