@@ -11,7 +11,6 @@ class PriceTable extends React.Component
   constructor() {
     super();
     this.state = Object.entries(cardBank);
-    console.log(this.state);
     const compare = (a, b) => {
       const aDiscount = a[1]["discount"];
       const bDiscount = b[1]["discount"];
@@ -31,7 +30,6 @@ class PriceTable extends React.Component
       }
     };
     this.state.sort(compare);
-    console.log(this.state);
   }
   render() {
     return (
