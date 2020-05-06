@@ -17,8 +17,8 @@ class PriceTable extends React.Component
       const aExist = (aDiscount !== undefined) ? true : false;
       const bExist = (bDiscount !== undefined) ? true : false;
       if (aExist && bExist) {
-        if (aDiscount < bDiscount) return -1;
-        if (aDiscount > bDiscount) return 1;
+        if (aDiscount > bDiscount) return -1;
+        if (aDiscount < bDiscount) return 1;
         return 0;
       }
       else if (aExist) return -1;
