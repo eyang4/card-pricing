@@ -11,6 +11,27 @@ class PriceTable extends React.Component
   constructor() {
     super();
     this.state = Object.entries(cardBank);
+    console.log(this.state);
+    const compare = (a, b) => {
+      const aDiscount = a[1]["discount"];
+      const bDiscount = b[1]["discount"];
+      const aExist = (aDiscount !== undefined) ? true : false;
+      const bExist = (bDiscount !== undefined) ? true : false;
+      if (aExist && bExist) {
+        if (aDiscount < bDiscount) return -1;
+        if (aDiscount > bDiscount) return 1;
+        return 0;
+      }
+      else if (aExist) return -1;
+      else if (bExist) return 1;
+      else {
+        if (a[0] < b[0]) return -1;
+        if (a[0] > b[0]) return 1;
+        return 0;
+      }
+    };
+    this.state.sort(compare);
+    console.log(this.state);
   }
   render() {
     return (
@@ -26,7 +47,7 @@ class PriceTable extends React.Component
             React.createElement('td', null, elem[0]),
             React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromSet"]),
             React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromOtherSets"]),
-            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, elem[1]["discount"] ? elem[1]["discount"]/100 : ""), // cannot perform arithmetic on an undefined value
+            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, (elem[1]["discount"] !== undefined) ? elem[1]["discount"]/100 : ""), // cannot perform arithmetic on an undefined value
           )
         )
       )
