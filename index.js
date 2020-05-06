@@ -24,9 +24,9 @@ class PriceTable extends React.Component
         ...this.state.map(elem =>
           React.createElement('tr', null,
             React.createElement('td', null, elem[0]),
-            React.createElement('td', {title: 'Set'}, 'Price'),
-            React.createElement('td', {title: 'Set'}, 'Price'),
-            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount'),
+            React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromSet"]),
+            React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromOtherSets"]),
+            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, elem[1]["discount"]),
           )
         )
       )
