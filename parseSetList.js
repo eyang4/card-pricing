@@ -105,7 +105,7 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
 
         if (lowPriceFromSet) cardBank[card].lowPriceFromSet = lowPriceFromSet;
         if (lowPriceFromOtherSets) cardBank[card].lowPriceFromOtherSets = lowPriceFromOtherSets;
-        if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = 100 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets;
+        if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = Math.round(10000 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets); // due to Javascript's weird rounding from double-precision 64-bit format IEEE 754 values
       }
 
       writeFile("mb1/" + date + "/parsedPage.js", "const cardBank = " + JSON.stringify(cardBank));

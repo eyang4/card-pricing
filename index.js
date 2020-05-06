@@ -26,7 +26,7 @@ class PriceTable extends React.Component
             React.createElement('td', null, elem[0]),
             React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromSet"]),
             React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromOtherSets"]),
-            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, elem[1]["discount"]),
+            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, elem[1]["discount"] ? elem[1]["discount"]/100 : ""), // cannot perform arithmetic on an undefined value
           )
         )
       )
