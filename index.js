@@ -49,7 +49,10 @@ class PriceTable extends React.Component
         ),
         ...this.state.map(elem =>
           React.createElement('tr', null,
-            React.createElement('td', null, elem[0]),
+            React.createElement('td',
+              (elem[1]["lowPriceFromSet"] >= elem[2]["lowPriceFromSet"] && elem[2]["lowPriceFromOtherSets"] >= elem [1]["lowPriceFromOtherSets"])
+              ? {className: "equilibrium"}
+              : null, elem[0]),
             ...elem.slice(1).map(dateData =>
               [React.createElement('td', {title: 'Set'}, dateData["lowPriceFromSet"]),
               React.createElement('td', {title: 'Set'}, dateData["lowPriceFromOtherSets"]),
