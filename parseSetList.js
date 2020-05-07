@@ -1,5 +1,5 @@
 let page = 1;
-const date = "Wed-Apr-01-2020";
+const date = "Wed-May-06-2020";
 // const date = new Date().toDateString().replace(/ /g, '-'); // for automated daily parsing
 const totalCards = 7785;
 const setName = "Mystery Booster";
@@ -108,7 +108,7 @@ while (fs.existsSync("mb1/" + date + "/pages/" + page + ".json")) {
         if (lowPriceFromSet && lowPriceFromOtherSets) cardBank[card].discount = Math.round(10000 * (lowPriceFromOtherSets - lowPriceFromSet) / lowPriceFromOtherSets); // due to Javascript's weird rounding from double-precision 64-bit format IEEE 754 values
       }
 
-      writeFile("mb1/" + date + "/parsedPage.js", "const cardBank = " + JSON.stringify(cardBank));
+      writeFile("mb1/" + date + "/parsedPage.js", "const " + date.split("-").slice(1).join("") + " = " + JSON.stringify(cardBank));
     }
 
   });

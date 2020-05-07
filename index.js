@@ -10,8 +10,13 @@ class PriceTable extends React.Component
 {
   constructor() {
     super();
-    this.state = Object.entries(cardBank);
-    const compare = (a, b) => {
+    const cardBank = Object.entries(May062020); // main input
+    for (const card of cardBank) {
+      card.push(Apr012020[card[0]]) // aux input
+    }
+
+    this.state = cardBank;
+    const compareByDiscount = (a, b) => {
       const aDiscount = a[1]["discount"];
       const bDiscount = b[1]["discount"];
       const aExist = (aDiscount !== undefined) ? true : false;
@@ -29,23 +34,33 @@ class PriceTable extends React.Component
         return 0;
       }
     };
-    this.state.sort(compare);
+    this.state.sort(compareByDiscount);
   }
   render() {
     return (
       React.createElement('table', null,
         React.createElement('thead', null,
           React.createElement('th', null, 'Name'),
-          React.createElement('th', {title: 'Set'}, 'Price'),
-          React.createElement('th', {title: 'Set'}, 'Price'),
-          React.createElement('th', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount'),
+          ...new Array (this.state[0].length - 1).fill(
+            [React.createElement('th', {title: 'Set'}, 'Price'),
+            React.createElement('th', {title: 'Set'}, 'Price'),
+            React.createElement('th', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount')]
+          ).flat(), // flattens nested arrays
         ),
         ...this.state.map(elem =>
           React.createElement('tr', null,
             React.createElement('td', null, elem[0]),
-            React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromSet"]),
-            React.createElement('td', {title: 'Set'}, elem[1]["lowPriceFromOtherSets"]),
-            React.createElement('td', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, (elem[1]["discount"] !== undefined) ? elem[1]["discount"]/100 : ""), // cannot perform arithmetic on an undefined value
+            ...elem.slice(1).map(dateData =>
+              [React.createElement('td', {title: 'Set'}, dateData["lowPriceFromSet"]),
+              React.createElement('td', {title: 'Set'}, dateData["lowPriceFromOtherSets"]),
+              React.createElement('td',
+                (dateData["discount"] !== undefined && dateData["discount"] > 0)
+                  ? {title: `Lowest: ${5-4}\nHighest: ${5-4}`, className: "discount"}
+                  : {title: `Lowest: ${5-4}\nHighest: ${5-4}`},
+                (dateData["discount"] !== undefined)
+                  ? dateData["discount"]/100
+                  : "")] // cannot perform arithmetic on an undefined value
+            ).flat(),
           )
         )
       )
