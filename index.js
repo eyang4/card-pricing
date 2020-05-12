@@ -15,7 +15,6 @@ class PriceTable extends React.Component
       card.push(Apr012020[card[0]]) // aux input
     }
 
-    this.state = cardBank;
     const compareByDiscount = (a, b) => {
       const aDiscount = a[1]["discount"];
       const bDiscount = b[1]["discount"];
@@ -34,38 +33,73 @@ class PriceTable extends React.Component
         return 0;
       }
     };
-    this.state.sort(compareByDiscount);
+    cardBank.sort(compareByDiscount);
+    this.state = {cardBank, imgURI: ''};
+    this.changeImgURI = this.changeImgURI.bind(this);
+    this.throttledChangeImgURI = this.throttledChangeImgURI.bind(this);
   }
+
+  changeImgURI = () => {
+    let throttled = false;
+    return async (cardName) => {
+      if (!throttled) {
+        throttled = true;
+        console.log('triggered changeImgURI: ', cardName);
+        const response = await fetch('https://api.scryfall.com/cards/named?fuzzy=' + cardName);
+        const data = await response.json();
+        setTimeout(() => {
+          console.log('setting img src');
+          this.setState({...this.state, imgURI: data.image_uris.small});
+          setTimeout(() => {
+            console.log('cancelling throttle');
+            throttled = false;
+          }, 1000);
+        }, 500);
+      }
+    }
+  };
+
+  throttledChangeImgURI = this.changeImgURI();
+
   render() {
     return (
-      React.createElement('table', null,
-        React.createElement('thead', null,
-          React.createElement('th', null, 'Name'),
-          ...new Array (this.state[0].length - 1).fill(
-            [React.createElement('th', {title: 'Set'}, 'Price'),
-            React.createElement('th', {title: 'Set'}, 'Price'),
-            React.createElement('th', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount')]
-          ).flat(), // flattens nested arrays
-        ),
-        ...this.state.map(elem =>
-          React.createElement('tr', null,
-            React.createElement('td',
-              (elem[1]["lowPriceFromSet"] >= elem[2]["lowPriceFromSet"] && elem[2]["lowPriceFromOtherSets"] >= elem [1]["lowPriceFromOtherSets"])
-              ? {className: "equilibrium"}
-              : null, elem[0]),
-            ...elem.slice(1).map(dateData =>
-              [React.createElement('td', {title: 'Set'}, dateData["lowPriceFromSet"]),
-              React.createElement('td', {title: 'Set'}, dateData["lowPriceFromOtherSets"]),
+      React.createElement('div', null,
+        React.createElement('table', null,
+          React.createElement('thead', null,
+            React.createElement('th', null, 'Name'),
+            ...new Array (this.state.cardBank[0].length - 1).fill(
+              [React.createElement('th', {title: 'Set'}, 'Price'),
+              React.createElement('th', {title: 'Set'}, 'Price'),
+              React.createElement('th', {title: `Lowest: ${5-4}\nHighest: ${5-4}`}, 'Discount')]
+            ).flat(), // flattens nested arrays
+          ),
+          ...this.state.cardBank.map(elem =>
+            React.createElement('tr', null,
               React.createElement('td',
-                (dateData["discount"] !== undefined && dateData["discount"] > 0)
-                  ? {title: `Lowest: ${5-4}\nHighest: ${5-4}`, className: "discount"}
-                  : {title: `Lowest: ${5-4}\nHighest: ${5-4}`},
-                (dateData["discount"] !== undefined)
-                  ? dateData["discount"]/100
-                  : "")] // cannot perform arithmetic on an undefined value
-            ).flat(),
+                (elem[1]["lowPriceFromSet"] >= elem[2]["lowPriceFromSet"] && elem[2]["lowPriceFromOtherSets"] >= elem [1]["lowPriceFromOtherSets"])
+                ? {className: "equilibrium", onMouseOver: () => this.throttledChangeImgURI(elem[0])}
+                : {onMouseOver: () => this.throttledChangeImgURI(elem[0])}, elem[0]),
+              ...elem.slice(1).map(dateData =>
+                [React.createElement('td',
+                  (dateData["lowPriceFromSet"] >= 1)
+                  ? {title: 'Set', className: "greaterThanOne"}
+                  : {title: 'Set'}, dateData["lowPriceFromSet"]),
+                React.createElement('td',
+                  (dateData["lowPriceFromOtherSets"] >= 1)
+                  ? {title: 'Set', className: "greaterThanOne"}
+                  : {title: 'Set'}, dateData["lowPriceFromOtherSets"]),
+                React.createElement('td',
+                  (dateData["discount"] !== undefined && dateData["discount"] > 0)
+                    ? {title: `Lowest: ${5-4}\nHighest: ${5-4}`, className: "discount"}
+                    : {title: `Lowest: ${5-4}\nHighest: ${5-4}`},
+                  (dateData["discount"] !== undefined)
+                    ? dateData["discount"]/100
+                    : "")] // cannot perform arithmetic on an undefined value
+              ).flat(),
+            )
           )
-        )
+        ),
+        React.createElement('img', {src: this.state.imgURI, className: 'topRightCorner', alt: 'Placeholder'}, )
       )
     );
   }
